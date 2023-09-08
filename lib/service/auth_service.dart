@@ -9,7 +9,7 @@ class AuthService {
   HttpUtil httpUtil = HttpUtil();
 
   Future<bool> login(String username, String password,BuildContext context) async {
-    Result<String> result = await httpUtil.post('/login', {
+    Result result = await httpUtil.post('/login', {
       'username':username,
       'password':password
     });

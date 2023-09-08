@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:lotus_bridge_window/models/colors.dart';
 import './router/router.dart';
 import 'plugin/plugin.dart';
 
@@ -18,8 +19,21 @@ class LotusBridgeApp extends StatelessWidget {
       title: '莲花桥',
       debugShowCheckedModeBanner: false,
       theme: FluentThemeData(
-        accentColor: Colors.magenta,
-          brightness:Brightness.dark
+        
+        accentColor: 
+        AccentColor.swatch(const <String, Color>{
+          'darkest': Color.fromRGBO(14, 196, 202, 1),
+          'darker': Color.fromRGBO(14, 196, 202, 1),
+          'dark': Color.fromRGBO(14, 196, 202, 1),
+          'normal': Color.fromRGBO(14, 196, 202, 1),
+          'light': Color.fromRGBO(14, 196, 202, 1),
+          'lighter': Color.fromRGBO(14, 196, 202, 1),
+          'lightest': Color.fromRGBO(14, 196, 202, 1),
+        }),
+          brightness:Brightness.dark,
+        typography: const Typography.raw(
+
+        )
       ),
       //配置路由
       routeInformationParser: router.routeInformationParser,

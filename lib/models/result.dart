@@ -1,8 +1,8 @@
-class Result<T> {
+class Result {
   int code;
   bool success;
   String? msg;
-  T? data;
+  dynamic data;
 
   Result({required this.code, required this.success,  this.msg, this.data});
 
@@ -17,14 +17,14 @@ class Result<T> {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['code'] = this.code;
-    data['success'] = this.success;
-    data['msg'] = this.msg;
+    data['code'] = code;
+    data['success'] = success;
+    data['msg'] = msg;
     data['data'] = this.data;
     return data;
   }
 
-  static Result<T> fail<T>({required String msg}) {
+  static Result fail({ String? msg}) {
     return Result(
       code: 400,
       success: false,
