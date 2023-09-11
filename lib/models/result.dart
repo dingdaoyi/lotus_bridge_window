@@ -31,4 +31,11 @@ class Result {
       msg: msg,
     );
   }
+  static Result unauthorized({ String? msg}) {
+    return Result(
+      code: 401,
+      success: false,
+      msg: msg,
+    );
+  }
 }

@@ -37,6 +37,13 @@ final router = GoRouter(
               name: "deviceAdd",
               path: 'add',
               builder: (context, state) => const DeviceAdd(),
+            ),
+            GoRoute(
+              name: "deviceEdit",
+              path: 'edit/:id',
+              builder: (context, state) =>  DeviceAdd(
+                deviceId: int.parse(state.pathParameters['id']!),
+              ),
             )
           ],
           builder: (context, state) => const DevicePage(),

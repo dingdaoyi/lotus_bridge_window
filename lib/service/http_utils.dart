@@ -7,6 +7,7 @@ import 'package:lotus_bridge_window/models/result.dart';
 
 import '../models/storage.dart';
 import '../router/router.dart';
+import '../utils/context.dart';
 
 class HttpUtil {
   static String domain = "http://127.0.0.1:8000";
@@ -37,6 +38,39 @@ class HttpUtil {
     }
   }
 
+  Future<Result> put<T>(
+      String url,
+      Object? data,
+      ) async {
+    try {
+      Response response = await dio.put(url, data: data);
+      Result result = await parseResponse<T>(response);
+      return result;
+    } catch (e) {
+      if (e is DioException) {
+        debugPrint('接口异常${e.message}');
+        return Result.fail(msg: e.message);
+      }
+      return Result.fail(msg: e.toString());
+    }
+  }
+
+  Future<Result> delete<T>(
+      String url,
+  { Map<String, dynamic>? queryParameters,}
+      ) async {
+    try {
+      Response response = await dio.delete(url, queryParameters: queryParameters);
+      Result result = await parseResponse<T>(response);
+      return result;
+    } catch (e) {
+      if (e is DioException) {
+        debugPrint('接口异常${e.message}');
+        return Result.fail(msg: e.message);
+      }
+      return Result.fail(msg: e.toString());
+    }
+  }
   Future<Result> get<T>(
     String url, {
     Map<String, dynamic>? queryParameters,
@@ -59,6 +93,19 @@ class HttpUtil {
       if(response.statusCode==HttpStatus.badRequest){
       return  Result.fail(msg: response.data);
       }
+      if(response.statusCode==HttpStatus.unauthorized){
+        router.pushNamed('login');
+        Result result= Result.fromJson(response.data);
+        displayInfoBar(LotusBridge.context!, builder: (context, close) {
+          return InfoBar(
+            title: const Text('删除设备错误'),
+            content:  Text(result.msg??'修改错误'),
+            severity: InfoBarSeverity.error,
+          );
+        });
+        return result;
+      }
+
       Map<String, dynamic> data = response.data;
       return Result.fromJson(data);
     } catch (e) {

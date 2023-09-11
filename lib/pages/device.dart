@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart' show ElevatedButton;
+import 'package:lotus_bridge_window/models/plugin_config.dart';
 import 'package:lotus_bridge_window/service/device_service.dart';
 import 'package:lotus_bridge_window/service/plugin_service.dart';
 import '../models/colors.dart';
@@ -20,7 +21,8 @@ class _DevicePageState extends State<DevicePage> {
   PluginService pluginService = PluginService();
 
   int _currentIndex = 1;
-  int? _pluginConfigId;
+  String? _protocolName;
+  PluginConfig? _pluginConfig;
 
   List<DeviceDTOStatistics> _deviceList = [];
 
@@ -45,7 +47,7 @@ class _DevicePageState extends State<DevicePage> {
     Typography typography = FluentTheme
         .of(context)
         .typography;
-    DeviceDTOStatistics dtoStatistics = _deviceList[0];
+    DeviceDTOStatistics dtoStatistics = _deviceList[index];
     return Card(
         child: Container(
           decoration: const BoxDecoration(
@@ -152,7 +154,11 @@ class _DevicePageState extends State<DevicePage> {
                     ),
                     FilledButton(
                       child: const Text('编辑'),
-                      onPressed: () => debugPrint('pressed button'),
+                      onPressed: () {
+                        router.goNamed('deviceEdit',pathParameters: {
+                          'id': dtoStatistics.id.toString()
+                        });
+                      },
                     ),
                     FilledButton(
                       child: const Text('数据统计'),
@@ -164,7 +170,7 @@ class _DevicePageState extends State<DevicePage> {
                     ),
                     FilledButton(
                       child: const Text('删除'),
-                      onPressed: () => debugPrint('pressed button'),
+                      onPressed: ()=>_deleteDevice(dtoStatistics.id),
                     ),
                   ],
                 ),
@@ -194,10 +200,11 @@ class _DevicePageState extends State<DevicePage> {
                 SizedBox(
                   width: 220,
                   child: ComboBoxPluginConfig(
-                    value: _pluginConfigId,
+                    value: _protocolName,
                     onChanged: (value){
                       setState(() {
-                        _pluginConfigId=value;
+                        _pluginConfig=value;
+                        _protocolName=value?.name;
                       });
                     },
                   ),
@@ -228,7 +235,7 @@ class _DevicePageState extends State<DevicePage> {
                   label: const Text('重置'),
                   onPressed: () {
                     setState(() {
-                      _pluginConfigId=null;
+                      _protocolName=null;
                     });
                   },
                 ),
@@ -243,7 +250,7 @@ class _DevicePageState extends State<DevicePage> {
                     childAspectRatio: 1.3,
                     crossAxisSpacing: 3,
                     mainAxisSpacing: 3),
-                itemCount: 6,
+                itemCount: _deviceList.length,
                 itemBuilder: _deviceItem),
           ),
           NumberPagination(
@@ -260,5 +267,46 @@ class _DevicePageState extends State<DevicePage> {
         ],
       ),
     );
+  }
+
+  Future<bool?> showContentDialog() async {
+    return await showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: const Text('确认要删除'),
+        content: const Text(
+          '删除后无法恢复数据',
+        ),
+        actions: [
+          Button(
+            child: const Text('删除'),
+            onPressed: () {
+              Navigator.pop(context, true);
+              // Delete file here
+            },
+          ),
+          FilledButton(
+            child: const Text('取消'),
+            onPressed: () =>  Navigator.pop(context, false),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteDevice(int id) async {
+    if(!(await showContentDialog()??false)){
+      return;
+    }
+   bool res= await deviceService.delete(id,context);
+   if(res) {
+     displayInfoBar(context, builder: (context, close) {
+       return InfoBar(
+         title: const Text('删除成功'),
+         severity: InfoBarSeverity.info,
+       );
+     });
+     initDeviceList();
+   }
   }
 }

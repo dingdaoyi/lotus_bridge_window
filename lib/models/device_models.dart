@@ -42,3 +42,38 @@ class DeviceDTOStatistics {
     );
   }
 }
+
+class DeviceDTO {
+  int id;
+  String name;
+  String deviceType;
+  Map<String, String>? customData;
+  String protocolName;
+
+  DeviceDTO({
+    required this.id,
+    required this.name,
+    required  this.deviceType,
+    this.customData,
+    required this.protocolName,
+  });
+  String toJson(){
+    return jsonEncode({
+      'id': id,
+      'name': name,
+      'deviceType': deviceType,
+      'customData': customData,
+      'protocolName': protocolName,
+    });
+  }
+
+  factory DeviceDTO.fromJson(Map<String, dynamic> data) {
+    return DeviceDTO(
+      id: data['id'],
+      name: data['name'],
+      deviceType: data['deviceType'],
+      customData: Map<String, String>.from(data['customData']),
+      protocolName: data['protocolName'],
+    );
+  }
+}

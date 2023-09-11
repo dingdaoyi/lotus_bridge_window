@@ -3,15 +3,16 @@ import '../models/plugin_config.dart';
 import '../service/plugin_service.dart';
 
 class ComboBoxPluginConfig extends StatefulWidget {
-  final int? value;
+  final String? value;
   final String?pluginType;
-  final void Function(int?)? onChanged;
-
+  final void Function(PluginConfig?)? onChanged;
+  final  List<PluginConfig>? initPluginConfigList;
   const ComboBoxPluginConfig({
     Key? key,
     this.value,
      this.pluginType='Protocol',
     this.onChanged,
+    this.initPluginConfigList
   }) : super(key: key);
 
   @override
@@ -21,12 +22,23 @@ class ComboBoxPluginConfig extends StatefulWidget {
 class _ComboBoxPluginConfigState extends State<ComboBoxPluginConfig> {
   PluginService pluginService=PluginService();
    List<PluginConfig> _pluginConfigList=[];
+   String? value;
   @override
   void initState() {
     super.initState();
     initData();
+    setState(() {
+      value=widget.value;
+    });
   }
+
   Future<void> initData() async {
+    if(widget.initPluginConfigList!=null) {
+      setState(() {
+        _pluginConfigList=widget.initPluginConfigList!;
+      });
+      return;
+    }
     var list=  await pluginService.pluginList(pluginType:widget.pluginType);
     if(list.isNotEmpty) {
       setState(() {
@@ -37,18 +49,20 @@ class _ComboBoxPluginConfigState extends State<ComboBoxPluginConfig> {
 
   @override
   Widget build(BuildContext context) {
-    return ComboBox<int>(
+    return ComboBox<String>(
       isExpanded: true,
-      value: widget.value,
-      items: _pluginConfigList.map<ComboBoxItem<int>>((pluginConfig) {
-        return ComboBoxItem<int>(
-          value: pluginConfig.id,
+      value: value,
+      items: _pluginConfigList.map<ComboBoxItem<String>>((pluginConfig) {
+        return ComboBoxItem<String>(
+          value: pluginConfig.name,
           child: Text(pluginConfig.name),
         );
       }).toList(),
       onChanged: (value) {
         if (widget.onChanged!=null) {
-          widget.onChanged!(value);
+          PluginConfig? data= _pluginConfigList.where((element) => element.name==value
+          ).firstOrNull;
+          widget.onChanged!(value==null?null:data);
         }
       },
       placeholder: const Text('插件选择'),

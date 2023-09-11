@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lotus_bridge_window/models/colors.dart';
+import 'package:lotus_bridge_window/utils/context.dart';
 import './router/router.dart';
 import 'plugin/plugin.dart';
 
@@ -15,6 +16,7 @@ class LotusBridgeApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    LotusBridge.initContext(context);
     return FluentApp.router(
       title: '莲花桥',
       debugShowCheckedModeBanner: false,

@@ -12,7 +12,7 @@ class PluginService {
     if(name!=null) {
       queryParameters['name']=name;
     }
-    if(name!=null) {
+    if(pluginType!=null) {
       queryParameters['pluginType']=pluginType;
     }
     Result result = await httpUtil.get('/plugin/list', queryParameters:queryParameters);
@@ -25,5 +25,13 @@ class PluginService {
       }
     }
     return list;
+  }
+
+  Future<PluginConfig?> pluginDetails(int id) async {
+    Result result = await httpUtil.get('/plugin/$id');
+    if (result.success) {
+    return PluginConfig.fromJson(result.data);
+    }
+    return null;
   }
 }
