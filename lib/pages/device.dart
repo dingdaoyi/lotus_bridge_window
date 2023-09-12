@@ -166,7 +166,10 @@ class _DevicePageState extends State<DevicePage> {
                     ),
                     FilledButton(
                       child: const Text('分组管理'),
-                      onPressed: () => debugPrint('pressed button'),
+                      onPressed: () =>router.pushNamed('deviceGroup',
+                      pathParameters: {
+                        'deviceId':dtoStatistics.id.toString()
+                      }),
                     ),
                     FilledButton(
                       child: const Text('删除'),

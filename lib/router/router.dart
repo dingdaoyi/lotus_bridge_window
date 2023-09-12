@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lotus_bridge_window/pages/device_add.dart';
+import 'package:lotus_bridge_window/pages/device_group.dart';
 
 import '../models/storage.dart';
 import '../pages/data_export.dart';
@@ -44,7 +45,14 @@ final router = GoRouter(
               builder: (context, state) =>  DeviceAdd(
                 deviceId: int.parse(state.pathParameters['id']!),
               ),
-            )
+            ),
+            GoRoute(
+              name: "deviceGroup",
+              path: 'deviceGroup/:deviceId',
+              builder: (context, state) =>  DeviceGroup(
+                deviceId: int.parse(state.pathParameters['deviceId']!),
+              ),
+            ),
           ],
           builder: (context, state) => const DevicePage(),
         ),
