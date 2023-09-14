@@ -77,7 +77,9 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
 
 
   void _editDeviceGroup() {
-
+    showDialog(context: context, builder: (context){
+      return const  DeviceGroupEdit(title: '编辑',);
+    });
   }
 
   @override
@@ -181,4 +183,20 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
     );
   }
 
+}
+
+class DeviceGroupEdit extends StatefulWidget {
+  final String title;
+
+  const DeviceGroupEdit({super.key, required this.title});
+
+  @override
+  State<DeviceGroupEdit> createState() => _DeviceGroupEditState();
+}
+
+class _DeviceGroupEditState extends State<DeviceGroupEdit> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
 }

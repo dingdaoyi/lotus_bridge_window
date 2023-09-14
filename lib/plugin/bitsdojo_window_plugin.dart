@@ -7,9 +7,9 @@ Future<void> initWindowManager() async {
   WindowOptions windowOptions =  const WindowOptions(
     size: Size(1200, 800),
     center: true,
-    backgroundColor: Colors.transparent,
     skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
+    title: '莲花桥',
+    titleBarStyle: TitleBarStyle.normal,
   );
   windowManager.waitUntilReadyToShow(windowOptions, () async {
     await windowManager.show();

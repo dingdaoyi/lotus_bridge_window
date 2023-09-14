@@ -36,10 +36,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Material(
       child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 40,
-          elevation: 0,
-        ),
         body: Column(
           children: [
             Expanded(
