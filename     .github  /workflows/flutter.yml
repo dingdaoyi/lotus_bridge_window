@@ -1,0 +1,59 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v10
+        with:
+          flutter-version: '3.x'
+
+      - name: Build Windows App
+        run: |
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            flutter build windows
+          fi
+
+      - name: Build macOS App
+        run: |
+          if [ "${{ matrix.os }}" == "macos-latest" ]; then
+            flutter build macos
+          fi
+
+      - name: Create Windows Release
+        run: |
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            # Create a ZIP archive for the Windows app
+            cd build/windows
+            zip -r windows_app.zip .
+          fi
+
+      - name: Create macOS Release
+        run: |
+          if [ "${{ matrix.os }}" == "macos-latest" ]; then
+            # Create a ZIP archive for the macOS app
+            cd build/macos
+            zip -r macos_app.zip .
+          fi
+
+      - name: Upload Releases
+        uses: actions/upload-release-assets@v1
+        with:
+          files: |
+            build/windows/windows_app.zip
+            build/macos/macos_app.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

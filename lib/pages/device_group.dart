@@ -56,7 +56,7 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
             children: [
               TextButton(
                 child: const Text('编辑'),
-                onPressed: () => debugPrint('pressed button'),
+                onPressed: _editDeviceGroup,
               ),
               const SizedBox(
                 width: 20,
@@ -73,6 +73,11 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
       ]));
     }
     return res;
+  }
+
+
+  void _editDeviceGroup() {
+
   }
 
   @override
@@ -175,4 +180,5 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
       ),
     );
   }
+
 }
