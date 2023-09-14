@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -23,31 +24,31 @@ jobs:
 
       - name: Build Windows App
         run: |
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+          if (${{ matrix.os }} -eq "windows-latest") {
             flutter build windows
-          fi
+          }
 
       - name: Build macOS App
         run: |
-          if [ "${{ matrix.os }}" == "macos-latest" ]; then
+          if (${{ matrix.os }} -eq "macos-latest") {
             flutter build macos
-          fi
+          }
 
       - name: Create Windows Release
         run: |
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+          if (${{ matrix.os }} -eq "windows-latest") {
             # Create a ZIP archive for the Windows app
             cd build/windows
-            zip -r windows_app.zip .
-          fi
+            Compress-Archive -Path . -DestinationPath windows_app.zip
+          }
 
       - name: Create macOS Release
         run: |
-          if [ "${{ matrix.os }}" == "macos-latest" ]; then
+          if (${{ matrix.os }} -eq "macos-latest") {
             # Create a ZIP archive for the macOS app
             cd build/macos
-            zip -r macos_app.zip .
-          fi
+            Compress-Archive -Path . -DestinationPath macos_app.zip
+          }
 
       - name: Upload Releases
         uses: actions/upload-artifact@v3
