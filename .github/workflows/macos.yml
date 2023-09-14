@@ -19,14 +19,13 @@ jobs:
           flutter-version: '3.10.6'
 
       - name: Build macOS App
-        run: |
-          flutter build macos
+        run: flutter build macos
 
       - name: Create macOS Release
         run: |
           # Create a ZIP archive for the macOS app
           cd build/macos
-          Compress-Archive -Path . -DestinationPath macos_app.zip
+          zip -r macos_app.zip .
 
       - name: Upload macOS Release
         uses: actions/upload-artifact@v3
