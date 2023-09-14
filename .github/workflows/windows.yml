@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Windows App
         run: |
-          flutter build windows
+          dart run msix:create
 
       - name: Create Windows Release
         run: |
