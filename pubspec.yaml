@@ -52,6 +52,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  msix: ^3.16.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -91,3 +92,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+msix_config:
+  display_name: 莲花桥
+  publisher_display_name: 岩冰
+  identity_name: com.yanbing.LotusBridge
+  msix_version: 1.0.0.0
+  logo_path: C:\path\to\logo.png
+  capabilities: internetClient, location, microphone, webcam

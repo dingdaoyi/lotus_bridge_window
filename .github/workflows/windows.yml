@@ -25,13 +25,13 @@ jobs:
       - name: Create Windows Release
         run: |
           # Create a ZIP archive for the Windows app
-          cd build/windows
+          cd build/windows/runner/Release/
           Compress-Archive -Path . -DestinationPath windows_app.zip
 
       - name: Upload Windows Release
         uses: actions/upload-artifact@v3
         with:
           name: windows-app
-          path: build/windows/windows_app.zip
+          path: build/windows/runner/Release/windows_app.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
