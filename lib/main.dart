@@ -1,5 +1,4 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:lotus_bridge_window/models/colors.dart';
 import 'package:lotus_bridge_window/utils/context.dart';
 import './router/router.dart';
 import 'plugin/plugin.dart';

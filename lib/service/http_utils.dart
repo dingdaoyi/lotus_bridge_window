@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:lotus_bridge_window/models/global.dart';
 import 'package:lotus_bridge_window/models/result.dart';
 
 import '../models/storage.dart';
@@ -10,11 +11,11 @@ import '../router/router.dart';
 import '../utils/context.dart';
 
 class HttpUtil {
-  static String domain = "http://127.0.0.1:8000";
+  // static String domain = "http://127.0.0.1:8000";
   static Dio dio = Dio();
 
   HttpUtil() {
-    dio.options.baseUrl = domain;
+    dio.options.baseUrl = Global.domain;
     dio.options.connectTimeout = const Duration(seconds: 5); //5s
     dio.options.receiveTimeout = const Duration(seconds: 5);
     dio.interceptors.add(LogInterceptor(responseBody: true));

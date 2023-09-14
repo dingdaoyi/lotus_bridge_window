@@ -8,6 +8,7 @@ import '../pages/data_export.dart';
 import '../pages/device.dart';
 import '../pages/login.dart';
 import '../pages/navigationPage.dart';
+import '../pages/settings.dart';
 
 final router = GoRouter(
   initialLocation: "/login", //初始化的路由
@@ -23,7 +24,7 @@ final router = GoRouter(
         }
         return null; //返回空表示不执行跳转
       },
-      builder: (context, state) => const LoginPage(),
+      builder: (context, state) => LoginPage(key: UniqueKey(),),
     ),
     ShellRoute(
       builder: (BuildContext context, GoRouterState state, Widget child) {
@@ -49,7 +50,7 @@ final router = GoRouter(
             GoRoute(
               name: "deviceGroup",
               path: 'deviceGroup/:deviceId',
-              builder: (context, state) =>  DeviceGroup(
+              builder: (context, state) =>  DeviceGroupPage(
                 deviceId: int.parse(state.pathParameters['deviceId']!),
               ),
             ),
@@ -60,6 +61,11 @@ final router = GoRouter(
           name: "dataExport",
           path: '/dataExport',
           builder: (context, state) => const DataExport(),
+        ),
+        GoRoute(
+          name: "settings",
+          path: '/settings',
+          builder: (context, state) => const GlobalSettings(),
         ),
       ],
     ),
