@@ -50,7 +50,7 @@ jobs:
           fi
 
       - name: Upload Releases
-        uses: actions/upload-release-assets@v1
+        uses: actions/upload-artifact@v3
         with:
           files: |
             build/windows/windows_app.zip
