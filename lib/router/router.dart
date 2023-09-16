@@ -8,21 +8,21 @@ import '../pages/data_export.dart';
 import '../pages/device.dart';
 import '../pages/login.dart';
 import '../pages/navigationPage.dart';
+import '../pages/point_page.dart';
 import '../pages/settings.dart';
 
 final router = GoRouter(
-  initialLocation: "/login", //初始化的路由
+  initialLocation: "/login",
   routes: [
     GoRoute(
       name: "login",
       path: '/login',
       redirect: (context, state) async {
-        // 判断用户有没有登录 加载不同的路由
         bool isLogin =  TokenStorage.getInstance().isLogin;
         if (isLogin) {
-          return "/device"; //跳转路由
+          return "/device";
         }
-        return null; //返回空表示不执行跳转
+        return null;
       },
       builder: (context, state) => LoginPage(key: UniqueKey(),),
     ),
@@ -52,6 +52,13 @@ final router = GoRouter(
               path: 'deviceGroup/:deviceId',
               builder: (context, state) =>  DeviceGroupPage(
                 deviceId: int.parse(state.pathParameters['deviceId']!),
+              ),
+            ),
+            GoRoute(
+              name: "point",
+              path: 'point/:groupId',
+              builder: (context, state) =>  PointPage(
+                deviceGroupId: int.parse(state.pathParameters['groupId']!),
               ),
             ),
           ],

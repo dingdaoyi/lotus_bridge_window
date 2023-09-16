@@ -1,4 +1,5 @@
 import 'package:fluent_ui/fluent_ui.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lotus_bridge_window/utils/context.dart';
 import './router/router.dart';
 import 'plugin/plugin.dart';
@@ -19,6 +20,16 @@ class LotusBridgeApp extends StatelessWidget {
     return FluentApp.router(
       title: '莲花桥',
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'), // 英文
+        Locale('zh', 'CN'), // 中文（简体）
+      ],
+      locale: const  Locale('zh', 'CN'),
       theme: FluentThemeData(
         
         accentColor: 
@@ -33,7 +44,9 @@ class LotusBridgeApp extends StatelessWidget {
         }),
           brightness:Brightness.dark,
         typography: const Typography.raw(
-
+          title: TextStyle(
+            fontSize: 24
+          )
         )
       ),
       //配置路由

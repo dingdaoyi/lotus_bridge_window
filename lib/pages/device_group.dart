@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lotus_bridge_window/models/device_group.dart';
+import 'package:lotus_bridge_window/router/router.dart';
 import 'package:lotus_bridge_window/service/device_grop_service.dart';
 
 import '../models/colors.dart';
@@ -7,7 +8,7 @@ import '../widgets/drawerNavigation.dart';
 import '../widgets/number_pagination.dart';
 import '../widgets/thematic_gradient.dart';
 import 'package:flutter/material.dart'
-    show ElevatedButton, DataTable, DataColumn, DataRow, DataCell,TextButton;
+    show ElevatedButton, DataTable, DataColumn, DataRow, DataCell, TextButton;
 
 class DeviceGroupPage extends StatefulWidget {
   final int deviceId;
@@ -54,18 +55,31 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(
+                width: 20,
+              ),
+              TextButton(
+                child: const Text(
+                  '点位信息',
+                ),
+                onPressed: () => router.pushNamed('point',pathParameters: {
+                  'groupId':group.id.toString()
+
+                }),
+              ),
               TextButton(
                 child: const Text('编辑'),
-                onPressed: _editDeviceGroup,
+                onPressed: () => _editDeviceGroup(deviceGroup: group),
               ),
               const SizedBox(
                 width: 20,
               ),
               TextButton(
-                child: const Text('删除',style: TextStyle(
-                  color: Color.fromRGBO(202, 42, 14, 1.0)
-                ),),
-                onPressed: () => debugPrint('pressed button'),
+                child: const Text(
+                  '删除',
+                  style: TextStyle(color: Colors.warningPrimaryColor),
+                ),
+                onPressed: () => _deleteDeviceGroup(group.id!),
               ),
             ],
           ),
@@ -75,11 +89,16 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
     return res;
   }
 
-
-  void _editDeviceGroup() {
-    showDialog(context: context, builder: (context){
-      return const  DeviceGroupEdit(title: '编辑',);
-    });
+  Future<void> _editDeviceGroup({DeviceGroup? deviceGroup}) async {
+   await  showDialog(
+        context: context,
+        builder: (context) {
+          return DeviceGroupEdit(
+            deviceId: widget.deviceId,
+            deviceGroup: deviceGroup,
+          );
+        });
+   queryDeviceGroup();
   }
 
   @override
@@ -111,7 +130,7 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
                     ElevatedButton.icon(
                       icon: const Icon(FluentIcons.add),
                       label: const Text('新增'),
-                      onPressed: () => debugPrint('pressed button'),
+                      onPressed: () => _editDeviceGroup(),
                     ),
                     const SizedBox(
                       width: 20,
@@ -158,7 +177,7 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
                         label: Container(
                             alignment: Alignment.center,
                             width: 280,
-                            child: const  Text('操作')),
+                            child: const Text('操作')),
                       )
                     ],
                     rows: _mapData(),
@@ -183,20 +202,147 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
     );
   }
 
+ Future<void> _deleteDeviceGroup(int id) async {
+   bool? result = await showDialog<bool>(
+     context: context,
+     builder: (context) =>
+         ContentDialog(
+           title: const Text('删除设备组'),
+           content: const Text(
+             '确认删除设备组',
+           ),
+           actions: [
+             Button(
+               child: const Text('删除'),
+               onPressed: () {
+                 Navigator.pop(context,true);
+                 // Delete file here
+               },
+             ),
+             FilledButton(
+               child: const Text('取消'),
+               onPressed: () => Navigator.pop(context, false),
+             ),
+           ],
+         ),
+   );
+   if(result==true) {
+     await deviceGroupService.delete(id);
+     queryDeviceGroup();
+   }
+ }
 }
 
 class DeviceGroupEdit extends StatefulWidget {
-  final String title;
+  final DeviceGroup? deviceGroup;
+  final int deviceId;
 
-  const DeviceGroupEdit({super.key, required this.title});
+  const DeviceGroupEdit({super.key, required this.deviceId,this.deviceGroup});
 
   @override
   State<DeviceGroupEdit> createState() => _DeviceGroupEditState();
 }
 
 class _DeviceGroupEditState extends State<DeviceGroupEdit> {
+  DeviceGroupService deviceGroupService = DeviceGroupService();
+
+  GlobalKey<FormState> formKey = GlobalKey();
+  TextEditingController nameController = TextEditingController();
+  int defaultInterval = 1200;
+  int? id;
+
+  @override
+  void initState() {
+    super.initState();
+    initDeviceGroup();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    nameController.dispose();
+    formKey.currentState?.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Center(
+      child: Container(
+        height: 300,
+        width: 600,
+        padding: const EdgeInsets.all(20),
+        decoration: const ThematicGradientDecoration(),
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              Text(
+                widget.deviceGroup == null ? '新增' : '编辑',
+                style: FluentTheme.of(context).typography.title,
+              ),
+              InfoLabel(
+                label: '群组名称',
+                child: TextFormBox(
+                    controller: nameController,
+                    validator: (value) =>
+                        value == null || value.isEmpty ? '名称不能为空' : null,
+                    placeholder: '请输入群组名称'),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              InfoLabel(
+                label: '采集间隔/秒',
+                child: NumberBox(
+                  value: defaultInterval,
+                  mode: SpinButtonPlacementMode.inline,
+                  onChanged: (value) => defaultInterval = value??1200,
+                ),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  HyperlinkButton(
+                      onPressed: _saveChanged, child:  const Text('确认'),),
+                  HyperlinkButton(
+                      child: const Text(
+                        '取消',
+                      ),
+                      onPressed: () => Navigator.of(context).pop()),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveChanged() async {
+    if (formKey.currentState!.validate()) {
+      DeviceGroup data=DeviceGroup(name: nameController.text,
+          interval: defaultInterval,
+          deviceId: widget.deviceId,
+        id: id
+      );
+     bool result= await (id==null?  deviceGroupService.insert(data,context):deviceGroupService.update(data,context));
+      if(result) {
+        Navigator.pop(context);
+      }
+    }
+  }
+
+  void initDeviceGroup() {
+    DeviceGroup? deviceGroup = widget.deviceGroup;
+    if (deviceGroup != null) {
+      setState(() {
+        id = deviceGroup.id;
+        defaultInterval = deviceGroup.interval;
+        nameController.text = deviceGroup.name;
+      });
+    }
   }
 }

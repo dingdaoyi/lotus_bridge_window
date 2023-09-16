@@ -22,13 +22,13 @@ class DeviceGroupService {
     return list;
   }
 
-  Future<bool> insert(DeviceGroup deviceGroup) async {
+  Future<bool> insert(DeviceGroup deviceGroup,BuildContext context) async {
     Result result = await httpUtil.post('/device-group',
         deviceGroup.toJson());
     if (result.success) {
       return true;
     }
-    displayInfoBar(LotusBridge.context!, builder: (context, close) {
+    displayInfoBar(context, builder: (context, close) {
       return InfoBar(
         title: const Text('添加失败'),
         content:  Text(result.msg??'添加设备组失败'),
@@ -40,13 +40,13 @@ class DeviceGroupService {
 
 
 
-  Future<bool> update(DeviceGroup deviceGroup) async {
-    Result result = await httpUtil.put('/device-group',
+  Future<bool> update(DeviceGroup deviceGroup,BuildContext context) async {
+    Result result = await httpUtil.put('/device-group/${deviceGroup.id}',
         deviceGroup.toJson());
     if (result.success) {
       return true;
     }
-    displayInfoBar(LotusBridge.context!, builder: (context, close) {
+    displayInfoBar(context, builder: (context, close) {
       return InfoBar(
         title: const Text('修改失败'),
         content:  Text(result.msg??'修改设备组失败'),
