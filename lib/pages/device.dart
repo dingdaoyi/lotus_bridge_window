@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show ElevatedButton;
 import 'package:lotus_bridge_window/models/plugin_config.dart';
 import 'package:lotus_bridge_window/service/device_service.dart';
 import 'package:lotus_bridge_window/service/plugin_service.dart';
+import 'package:lotus_bridge_window/widgets/thematic_gradient.dart';
 import '../models/colors.dart';
 import '../models/device_models.dart';
 import '../router/router.dart';
@@ -22,7 +23,6 @@ class _DevicePageState extends State<DevicePage> {
 
   int _currentIndex = 1;
   String? _protocolName;
-  PluginConfig? _pluginConfig;
 
   List<DeviceDTOStatistics> _deviceList = [];
 
@@ -196,6 +196,7 @@ class _DevicePageState extends State<DevicePage> {
             height: 60,
             // width: 550,
             padding: const EdgeInsets.all(5),
+            decoration: const ThematicGradientDecoration(),
             // color: Colors.green,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -206,7 +207,6 @@ class _DevicePageState extends State<DevicePage> {
                     value: _protocolName,
                     onChanged: (value){
                       setState(() {
-                        _pluginConfig=value;
                         _protocolName=value?.name;
                       });
                     },
@@ -262,7 +262,6 @@ class _DevicePageState extends State<DevicePage> {
                 _currentIndex = pageNumber;
               });
             },
-            colorPrimary: Colors.black,
             colorSub: BridgeColors.primary,
             pageTotal: 1,
             pageInit: _currentIndex,

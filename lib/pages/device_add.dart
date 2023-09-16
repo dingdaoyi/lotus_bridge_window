@@ -81,7 +81,8 @@ class _DeviceAddState extends State<DeviceAdd> {
      bool res=  isEdite?  await deviceService.update(device, context):
      await deviceService.save(device, context);
      if(res) {
-       Navigator.pop(context);
+      router.replaceNamed('device');
+
      }
     }
 
