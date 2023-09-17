@@ -204,6 +204,7 @@ class _DevicePageState extends State<DevicePage> {
                 SizedBox(
                   width: 220,
                   child: ComboBoxPluginConfig(
+                    key: UniqueKey(),
                     value: _protocolName,
                     onChanged: (value){
                       setState(() {

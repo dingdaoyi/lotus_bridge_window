@@ -58,11 +58,14 @@ class _ComboBoxPluginConfigState extends State<ComboBoxPluginConfig> {
           child: Text(pluginConfig.name),
         );
       }).toList(),
-      onChanged: (value) {
+      onChanged: (changedValue) {
         if (widget.onChanged!=null) {
-          PluginConfig? data= _pluginConfigList.where((element) => element.name==value
+          PluginConfig? data= _pluginConfigList.where((element) => element.name==changedValue
           ).firstOrNull;
-          widget.onChanged!(value==null?null:data);
+          setState(() {
+            value=changedValue;
+          });
+          widget.onChanged!(changedValue==null?null:data);
         }
       },
       placeholder: const Text('插件选择'),
