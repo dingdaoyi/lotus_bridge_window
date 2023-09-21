@@ -9,8 +9,8 @@ import 'http_utils.dart';
 class DeviceGroupService {
   HttpUtil httpUtil = HttpUtil();
 
-  Future<List<DeviceGroup>> deviceGroupList(int deviceId) async {
-    Result result = await httpUtil.get('/device-group/list/$deviceId');
+  Future<List<DeviceGroup>> deviceGroupList({int? deviceId}) async {
+    Result result = await httpUtil.get('/device-group/list?device_id=$deviceId',);
     List<DeviceGroup> list = [];
     if (result.success) {
       List resList = result.data;

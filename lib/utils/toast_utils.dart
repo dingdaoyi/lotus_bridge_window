@@ -26,7 +26,7 @@ class ToastUtils {
     await displayInfoBar(context, builder: (context, close) {
       return InfoBar(
         title: Text(title),
-        content: Text(message ?? '操作失败'),
+        content: message!=null?Text(message):null,
         severity: InfoBarSeverity.info,
       );
     });

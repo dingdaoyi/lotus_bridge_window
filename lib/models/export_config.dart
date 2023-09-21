@@ -4,6 +4,7 @@ class ExportConfig {
   String name;
   Map<String, String> configuration;
   String description;
+  String? groupNames;
   int pluginId;
 
   ExportConfig({
@@ -12,6 +13,7 @@ class ExportConfig {
     required this.configuration,
     required this.description,
     required this.pluginId,
+    this.groupNames
   });
 
   factory ExportConfig.fromJson(Map<String, dynamic> json) {
@@ -21,6 +23,7 @@ class ExportConfig {
       configuration: Map<String, String>.from(json['configuration']),
       description: json['description'],
       pluginId: json['pluginId'],
+        groupNames:json['groupNames']
     );
   }
 

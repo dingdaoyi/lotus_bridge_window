@@ -32,7 +32,7 @@ class _DeviceGroupPageState extends State<DeviceGroupPage> {
 
   Future<void> queryDeviceGroup() async {
     List<DeviceGroup> res =
-        await deviceGroupService.deviceGroupList(widget.deviceId);
+        await deviceGroupService.deviceGroupList(deviceId: widget.deviceId);
     if (res.isNotEmpty) {
       setState(() {
         deviceGroupList = res;
