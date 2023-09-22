@@ -25,10 +25,8 @@ class DataExportConfigPage extends StatefulWidget {
 class _DataExportConfigPageState extends State<DataExportConfigPage> {
   ExportService exportService = ExportService();
   PluginService pluginService = PluginService();
-
+  final TextEditingController _protocolNameController = TextEditingController();
   int _currentIndex = 1;
-  String? _pluginName;
-
   List<ExportConfig> _exportConfigList = [];
   Map<int, PluginConfig> _pluginConfigMap = {};
 
@@ -37,6 +35,13 @@ class _DataExportConfigPageState extends State<DataExportConfigPage> {
     super.initState();
     initPluginConfigList();
     initExportConfigList();
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
+    _protocolNameController.dispose();
   }
 
   Future<void> initPluginConfigList() async {
@@ -216,14 +221,8 @@ class _DataExportConfigPageState extends State<DataExportConfigPage> {
                       SizedBox(
                         width: 220,
                         child: ComboBoxPluginConfig(
-                          key: UniqueKey(),
-                          value: _pluginName,
+                          controller: _protocolNameController,
                           pluginType: 'DataOutput',
-                          onChanged: (value) {
-                            setState(() {
-                              _pluginName = value?.name;
-                            });
-                          },
                         ),
                       ),
                       const SizedBox(width: 40),
@@ -251,9 +250,7 @@ class _DataExportConfigPageState extends State<DataExportConfigPage> {
                         icon: const Icon(FluentIcons.reset),
                         label: const Text('重置'),
                         onPressed: () {
-                          setState(() {
-                            _pluginName = null;
-                          });
+                          _protocolNameController.clear();
                         },
                       ),
                     ],

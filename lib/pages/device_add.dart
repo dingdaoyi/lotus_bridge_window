@@ -26,8 +26,7 @@ class _DeviceAddState extends State<DeviceAdd> {
   TextEditingController deviceNameController=TextEditingController();
   List<PluginConfig>? _pluginConfigList;
   DeviceDTO? dataDevice;
-
-  String? _protocolName;
+  final TextEditingController _protocolNameController = TextEditingController();
   PluginConfig? _pluginConfig;
   Map<String,String> formDataMap={};
 
@@ -45,6 +44,12 @@ class _DeviceAddState extends State<DeviceAdd> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _protocolNameController.dispose();
+    deviceNameController.dispose();
+  }
 
 
   Future<void> initDeviceData() async {
@@ -53,11 +58,11 @@ class _DeviceAddState extends State<DeviceAdd> {
       if(deviceDTO!=null) {
         setState(() {
           dataDevice=deviceDTO;
-          _protocolName=dataDevice?.protocolName;
+          _protocolNameController.text=dataDevice?.protocolName??'';
           deviceNameController.text=dataDevice?.name??'';
           if(_pluginConfigList!=null) {
             for( PluginConfig config in _pluginConfigList!){
-              if(config.name==_protocolName) {
+              if(config.name==deviceNameController.text) {
                 _pluginConfig=config;
               }
             }
@@ -75,7 +80,7 @@ class _DeviceAddState extends State<DeviceAdd> {
           id: widget.deviceId??-1,
           name: deviceNameController.text,
           deviceType: 'Gateway',
-          protocolName: _protocolName!,
+          protocolName: deviceNameController.text,
           customData:formDataMap
       );
      bool res=  isEdite?  await deviceService.update(device, context):
@@ -156,13 +161,11 @@ class _DeviceAddState extends State<DeviceAdd> {
                               InfoLabel(
                                 label: '设备协议',
                                 child: ComboBoxPluginConfig(
-                                  key: ObjectKey(_protocolName),
                                   initPluginConfigList: _pluginConfigList,
-                                  value: _protocolName,
+                                  controller: _protocolNameController,
                                   onChanged: (value){
                                     setState(() {
                                       _pluginConfig=value;
-                                      _protocolName=value?.name;
                                     });
                                   },
                                 ),

@@ -29,7 +29,7 @@ class _ExportConfigEditState extends State<ExportConfigEdit> {
   List<PluginConfig>? _pluginConfigList;
   ExportConfig? exportConfig;
 
-  String? _pluginName;
+  TextEditingController pluginConfigController = TextEditingController();
   PluginConfig? _pluginConfig;
   Map<String, String> formDataMap = {};
 
@@ -45,6 +45,14 @@ class _ExportConfigEditState extends State<ExportConfigEdit> {
     initPluginData();
   }
 
+
+  @override
+  void dispose() {
+    super.dispose();
+    exportNameController.dispose();
+    pluginConfigController.dispose();
+  }
+
   Future<void> initExportConfigData() async {
     if (widget.exportConfigId != null) {
       ExportConfig? config =
@@ -55,9 +63,8 @@ class _ExportConfigEditState extends State<ExportConfigEdit> {
           exportNameController.text = exportConfig?.name ?? '';
           if (_pluginConfigList != null) {
             for (PluginConfig config in _pluginConfigList!) {
-              if (config.name == _pluginName) {
+              if (config.name == pluginConfigController.text) {
                 _pluginConfig = config;
-                _pluginName = config.name;
               }
             }
           }
@@ -165,14 +172,12 @@ class _ExportConfigEditState extends State<ExportConfigEdit> {
                           InfoLabel(
                             label: '插件名称',
                             child: ComboBoxPluginConfig(
-                              key: GlobalKey(),
                               pluginType: 'DataOutput',
-                              value: _pluginName,
+                              controller: pluginConfigController,
                               initPluginConfigList: _pluginConfigList,
                               onChanged: (value){
                                 setState(() {
                                   _pluginConfig=value;
-                                  _pluginName=value?.name;
                                 });
                               },
                             ),

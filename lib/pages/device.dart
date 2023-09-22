@@ -22,8 +22,7 @@ class _DevicePageState extends State<DevicePage> {
   PluginService pluginService = PluginService();
 
   int _currentIndex = 1;
-  String? _protocolName;
-
+  final TextEditingController _protocolNameController = TextEditingController();
   List<DeviceDTOStatistics> _deviceList = [];
 
   @override
@@ -204,13 +203,7 @@ class _DevicePageState extends State<DevicePage> {
                 SizedBox(
                   width: 220,
                   child: ComboBoxPluginConfig(
-                    key: UniqueKey(),
-                    value: _protocolName,
-                    onChanged: (value){
-                      setState(() {
-                        _protocolName=value?.name;
-                      });
-                    },
+                    controller: _protocolNameController,
                   ),
                 ),
                 const SizedBox(width: 40),
@@ -238,9 +231,8 @@ class _DevicePageState extends State<DevicePage> {
                   icon: const Icon(FluentIcons.reset),
                   label: const Text('重置'),
                   onPressed: () {
-                    setState(() {
-                      _protocolName=null;
-                    });
+                    _protocolNameController.text = '';
+                    initDeviceList();
                   },
                 ),
               ],

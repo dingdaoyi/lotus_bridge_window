@@ -3,13 +3,14 @@ import '../models/plugin_config.dart';
 import '../service/plugin_service.dart';
 
 class ComboBoxPluginConfig extends StatefulWidget {
-  final String? value;
+  final TextEditingController controller;
+
   final String?pluginType;
   final void Function(PluginConfig?)? onChanged;
   final  List<PluginConfig>? initPluginConfigList;
   const ComboBoxPluginConfig({
     Key? key,
-    this.value,
+    required this.controller,
      this.pluginType='Protocol',
     this.onChanged,
     this.initPluginConfigList
@@ -26,10 +27,14 @@ class _ComboBoxPluginConfigState extends State<ComboBoxPluginConfig> {
   @override
   void initState() {
     super.initState();
-    initData();
+    widget.controller
+    .addListener(() {
     setState(() {
-      value=widget.value;
+      value=widget.controller.text==''?null:widget.controller.text;
     });
+    });
+
+    initData();
   }
 
   Future<void> initData() async {
@@ -59,13 +64,11 @@ class _ComboBoxPluginConfigState extends State<ComboBoxPluginConfig> {
         );
       }).toList(),
       onChanged: (changedValue) {
+        widget.controller.text=changedValue!;
         if (widget.onChanged!=null) {
           PluginConfig? data= _pluginConfigList.where((element) => element.name==changedValue
           ).firstOrNull;
-          setState(() {
-            value=changedValue;
-          });
-          widget.onChanged!(changedValue==null?null:data);
+          widget.onChanged!(data);
         }
       },
       placeholder: const Text('插件选择'),
