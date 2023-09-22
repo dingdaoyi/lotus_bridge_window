@@ -10,7 +10,6 @@ import 'package:lotus_bridge_window/service/plugin_service.dart';
 import 'package:lotus_bridge_window/utils/toast_utils.dart';
 import 'package:lotus_bridge_window/widgets/thematic_gradient.dart';
 import '../models/colors.dart';
-import '../models/device_models.dart';
 import '../router/router.dart';
 import '../widgets/comboBoxPluginConfig.dart';
 import '../widgets/number_pagination.dart';
