@@ -1,5 +1,5 @@
 name: lotus_bridge_window
-description: LotusBridge桌面程序
+description: 边缘网关桌面应用
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -44,6 +44,7 @@ dependencies:
   motion_toast: ^2.7.8
   flutter_markdown: ^0.6.17+2
   shared_preferences: ^2.2.0
+  flutter_json_view: ^1.1.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart';
+
 import '../router/router.dart';
 import '../widgets/win_manager_listener.dart';
 
@@ -13,11 +13,10 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
-  int topIndex = 0; //第几个选中
-  //左侧的选项卡 以及选项卡对应的页面
+  int topIndex = 0;
   List<NavigationPaneItem> items = [
     PaneItem(
-      icon: const Icon(FluentIcons.link),
+      icon: const ImageIcon(AssetImage('assets/images/device_link.png')),
       title: const Text(
         '向南链接',
       ),
@@ -28,13 +27,24 @@ class _NavigationPageState extends State<NavigationPage> {
     ),
     PaneItemSeparator(),
     PaneItem(
-      icon: Icon(FluentIcons.apps_content),
+      icon: const ImageIcon(AssetImage('assets/images/export_config.png')),
       title: const Text(
         '北向应用',
       ),
       body: const SizedBox.shrink(),
       onTap: () {
         router.pushNamed('dataExport');
+      },
+    ),
+    PaneItemSeparator(),
+    PaneItem(
+      icon: const ImageIcon(AssetImage('assets/images/plugin_config.png')),
+      title: const Text(
+        '插件管理',
+      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        router.pushNamed('pluginConfig');
       },
     ),
   ];
@@ -74,7 +84,6 @@ class _NavigationPageState extends State<NavigationPage> {
   }
 }
 
-//定义的公共组件
 class NavigationBodyItem extends StatelessWidget {
   const NavigationBodyItem({
     Key? key,

@@ -3,15 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
+
 Future<void> initSystemTray() async {
-  String path =
-  Platform.isWindows ? 'assets/images/app_icon.ico' : 'assets/images/app_icon.png';
+  String path = Platform.isWindows
+      ? 'assets/images/app_icon.ico'
+      : 'assets/images/app_icon.png';
 
   final SystemTray systemTray = SystemTray();
 
   // We first init the systray menu
   await systemTray.initSystemTray(
-    // title: "莲花桥",
+    title: "莲花桥",
     iconPath: path,
   );
 
@@ -20,23 +22,36 @@ Future<void> initSystemTray() async {
   await menu.buildFrom([
     MenuItemLabel(label: '打开', onClicked: (menuItem) => windowManager.show()),
     MenuItemLabel(label: '隐藏', onClicked: (menuItem) => windowManager.hide()),
-    SubMenu(label: '操纵',
-        image: getImagePath('gift_icon'),
-        children: [
-      MenuItemLabel(label: '系统管理', onClicked: (menuItem){
-        debugPrint('');
-      }),
-      MenuItemLabel(label: '南向链接', onClicked: (menuItem){
-        debugPrint('');
-      }),
-      MenuItemLabel(label: '北向应用', onClicked: (menuItem){
-        debugPrint('');
-      }),
-      MenuItemLabel(label: '插件管理', onClicked: (menuItem){
-        debugPrint('');
-      }),
-    ]),
-    MenuItemLabel(label: '退出', onClicked: (menuItem) => windowManager.destroy()),
+    // SubMenu(
+    //     label: '操纵',
+    //     // image: getImagePath('gift_icon'),
+    //     children: [
+    //       MenuItemLabel(
+    //           label: '系统管理',
+    //           onClicked: (menuItem) {
+    //             debugPrint('');
+    //           }),
+    //       MenuItemLabel(
+    //           label: '南向链接',
+    //           onClicked: (menuItem) {
+    //             windowManager.show();
+    //             router.pushNamed('device');
+    //           }),
+    //       MenuItemLabel(
+    //           label: '北向应用',
+    //           onClicked: (menuItem) {
+    //             windowManager.show();
+    //             router.pushNamed('dataExport');
+    //           }),
+    //       MenuItemLabel(
+    //           label: '插件管理',
+    //           onClicked: (menuItem) {
+    //             windowManager.show();
+    //             router.pushNamed('pluginConfig');
+    //           }),
+    //     ]),
+    MenuItemLabel(
+        label: '退出', onClicked: (menuItem) => windowManager.destroy()),
   ]);
 
   await systemTray.setContextMenu(menu);
@@ -50,10 +65,8 @@ Future<void> initSystemTray() async {
   });
 }
 
-String getTrayImagePath(String imageName) {
-  return Platform.isWindows ? 'assets/images/$imageName.ico' : 'assets/images/$imageName.png';
-}
-
 String getImagePath(String imageName) {
-  return Platform.isWindows ? 'assets/images/$imageName.bmp' : 'assets/images/$imageName.png';
+  return Platform.isWindows
+      ? 'assets/images/$imageName.bmp'
+      : 'assets/images/$imageName.png';
 }

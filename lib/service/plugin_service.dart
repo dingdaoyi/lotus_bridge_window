@@ -7,15 +7,16 @@ class PluginService {
   HttpUtil httpUtil = HttpUtil();
 
   Future<List<PluginConfig>> pluginList(
-      {String? name, String? pluginType='Protocol'}) async {
-    Map<String, dynamic>? queryParameters={};
-    if(name!=null) {
-      queryParameters['name']=name;
+      {String? name, String? pluginType}) async {
+    Map<String, dynamic>? queryParameters = {};
+    if (name != null) {
+      queryParameters['name'] = name;
     }
-    if(pluginType!=null) {
-      queryParameters['pluginType']=pluginType;
+    if (pluginType != null) {
+      queryParameters['pluginType'] = pluginType;
     }
-    Result result = await httpUtil.get('/plugin/list', queryParameters:queryParameters);
+    Result result =
+        await httpUtil.get('/plugin/list', queryParameters: queryParameters);
     List<PluginConfig> list = [];
     if (result.success) {
       List resList = result.data;
@@ -30,7 +31,7 @@ class PluginService {
   Future<PluginConfig?> pluginDetails(int id) async {
     Result result = await httpUtil.get('/plugin/$id');
     if (result.success) {
-    return PluginConfig.fromJson(result.data);
+      return PluginConfig.fromJson(result.data);
     }
     return null;
   }

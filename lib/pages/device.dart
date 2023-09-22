@@ -235,7 +235,7 @@ class _DevicePageState extends State<DevicePage> {
                 ),
                 const SizedBox(width: 40),
                 ElevatedButton.icon(
-                  icon: const Icon(FluentIcons.add),
+                  icon: const Icon(FluentIcons.reset),
                   label: const Text('重置'),
                   onPressed: () {
                     setState(() {
