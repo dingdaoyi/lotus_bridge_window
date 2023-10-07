@@ -35,7 +35,7 @@ class _WinManagerListenerState extends State<WinManagerListener>
   void onWindowClose() async {
     bool isPreventClose = await windowManager.isPreventClose();
     if (isPreventClose) {
-      showDialog(
+    await  showDialog(
         context: context,
         builder: (_) {
           return AlertDialog(

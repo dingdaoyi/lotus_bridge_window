@@ -47,6 +47,18 @@ class _NavigationPageState extends State<NavigationPage> {
         router.pushNamed('pluginConfig');
       },
     ),
+    PaneItemSeparator(),
+    PaneItem(
+      //监控
+      icon: const Icon(FluentIcons.analytics_view),
+      title: const Text(
+        '点位监控',
+      ),
+      body: const SizedBox.shrink(),
+      onTap: () {
+        router.pushNamed('pointView');
+      },
+    ),
   ];
 
   @override

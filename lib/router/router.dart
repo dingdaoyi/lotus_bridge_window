@@ -12,6 +12,7 @@ import '../pages/login.dart';
 import '../pages/navigationPage.dart';
 import '../pages/plugin_detail.dart';
 import '../pages/point_page.dart';
+import '../pages/point_view.dart';
 import '../pages/settings.dart';
 
 final router = GoRouter(
@@ -102,6 +103,11 @@ final router = GoRouter(
                 ),
               ),
             ]),
+        GoRoute(
+            name: "pointView",
+            path: '/pointView',
+            builder: (context, state) => PointViewPage(key: UniqueKey()),
+        ),
         GoRoute(
           name: "settings",
           path: '/settings',
