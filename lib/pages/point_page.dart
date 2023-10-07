@@ -64,6 +64,13 @@ class _PointPageState extends State<PointPage> {
                 width: 20,
               ),
               TextButton(
+                child: const Text('查看值'),
+                onPressed: () => _readPointValue(point),
+              ),
+              const SizedBox(
+                width: 20,
+              ),
+              TextButton(
                 child: const Text('编辑'),
                 onPressed: () => _editPoint(point: point),
               ),
@@ -219,6 +226,11 @@ class _PointPageState extends State<PointPage> {
         ],
       ),
     );
+  }
+
+  Future<void> _readPointValue(Point point) async {
+    var value=await pointService.readPointValue(point.id!, context);
+    ToastUtils.showData(context,  content: '点位值:${value}', tile: '点位值');
   }
 
   Future<void> _editPoint({Point? point}) async {

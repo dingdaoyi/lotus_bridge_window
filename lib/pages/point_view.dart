@@ -1,16 +1,15 @@
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart' show ElevatedButton;
-import 'package:lotus_bridge_window/models/device_group.dart';
+import 'package:flutter/material.dart'
+    show DataCell, DataColumn, DataRow, DataTable, ElevatedButton, TextButton;
 import 'package:lotus_bridge_window/models/export_config.dart';
-import 'package:lotus_bridge_window/models/export_group.dart';
 import 'package:lotus_bridge_window/models/plugin_config.dart';
-import 'package:lotus_bridge_window/service/device_grop_service.dart';
 import 'package:lotus_bridge_window/service/export_service.dart';
-import 'package:lotus_bridge_window/service/plugin_service.dart';
-import 'package:lotus_bridge_window/utils/toast_utils.dart';
 import 'package:lotus_bridge_window/widgets/thematic_gradient.dart';
 import '../models/colors.dart';
+import '../models/pagination_response.dart';
+import '../models/point.dart';
 import '../router/router.dart';
+import '../service/point_service.dart';
 import '../widgets/comboBoxPluginConfig.dart';
 import '../widgets/number_pagination.dart';
 
@@ -22,19 +21,25 @@ class PointViewPage extends StatefulWidget {
 }
 
 class _PointViewPageState extends State<PointViewPage> {
-  ExportService exportService = ExportService();
-  PluginService pluginService = PluginService();
+  PointService pointService = PointService();
   final TextEditingController _protocolNameController = TextEditingController();
   int _currentIndex = 1;
-  List<ExportConfig> _exportConfigList = [];
-  Map<int, PluginConfig> _pluginConfigMap = {};
-
+  int _pageTotal = 1;
+  List<Point> list = [];
+  int deviceGroupId = 1;
   @override
   void initState() {
     super.initState();
-    initExportConfigList();
   }
 
+  Future<void> initPointPage() async {
+    PaginationResponse<Point> response = await pointService
+        .pointPage(deviceGroupId, page: _currentIndex, limit: 20);
+    setState(() {
+      _pageTotal = response.total ~/ 20 + 1;
+      list = response.data;
+    });
+  }
 
   @override
   void dispose() {
@@ -42,143 +47,28 @@ class _PointViewPageState extends State<PointViewPage> {
     _protocolNameController.dispose();
   }
 
-
-  Future<void> initExportConfigList() async {
-    List<ExportConfig> resList = await exportService.exportConfigList();
-    if (resList.isNotEmpty) {
-      setState(() {
-        _exportConfigList = resList;
-      });
-    }
-  }
-
-  Widget _exportConfigItem(BuildContext context, int index) {
-    ExportConfig exportConfig = _exportConfigList[index];
-    return Card(
-        child: Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromRGBO(47, 182, 255, 0.24),
-            Color.fromRGBO(19, 23, 32, 0),
-          ],
-        ),
-      ),
-      child: Column(
-        children: [
-          Expanded(
-              child: Row(
-            children: [
-              Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        '正常',
-                        style:
-                            TextStyle(color: Color.fromRGBO(14, 196, 202, 1)),
-                      ),
-                      Image.asset('assets/images/device_1.png')
-                    ],
-                  )),
-              Expanded(
-                flex: 3,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        exportConfig.name,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text.rich(
-                          TextSpan(
-                              text: '设备群组',
-                              style: const TextStyle(
-                                  color: Color.fromRGBO(159, 172, 175, 1),
-                                  fontSize: 12),
-                              children: [
-                                TextSpan(
-                                    text:
-                                        ' ${exportConfig.groupNames??''}',
-                                    style: const TextStyle(
-                                        color: Color.fromRGBO(238, 248, 250, 1),
-                                        fontSize: 12))
-                              ]),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Text.rich(TextSpan(
-                          text: '使用插件',
-                          style: const TextStyle(
-                              color: Color.fromRGBO(159, 172, 175, 1),
-                              fontSize: 12),
-                          children: [
-                            TextSpan(
-                                text:
-                                    ' ${_pluginConfigMap[exportConfig.pluginId]?.name}',
-                                style: const TextStyle(
-                                    color: Color.fromRGBO(238, 248, 250, 1),
-                                    fontSize: 12))
-                          ])),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )),
-          SizedBox(
-            height: 40,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                FilledButton(
-                  child: const Text('禁用'),
-                  onPressed: () => debugPrint('pressed button'),
-                ),
-                FilledButton(
-                  child: const Text('编辑'),
-                  onPressed: () {
-                    router.goNamed('exportConfigEdit',
-                        pathParameters: {'id': exportConfig.id.toString()});
-                  },
-                ),
-                FilledButton(
-                  child: const Text('群组配置'),
-                  onPressed: () {
-
-
-                  },
-                ),
-                FilledButton(
-                  child: const Text('删除'),
-                  onPressed: () => _deleteDevice(exportConfig.id),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
-    ));
+  List<DataRow> _itemData() {
+    return list.map((point) {
+      return DataRow(cells: [
+        DataCell(Center(child: SelectableText('${point.id}'))),
+        DataCell(Center(child: SelectableText(point.address))),
+        DataCell(Center(child: SelectableText(point.description))),
+        DataCell(Center(
+            child: SelectableText(Point.dataTypeToString(point.dataType)))),
+        DataCell(Center(child: SelectableText('${point.precision}'))),
+        DataCell(Center(child: SelectableText(point.partNumber ?? ''))),
+        DataCell(Center(child: SelectableText('${point.multiplier}'))),
+        DataCell(
+            Center(child: SelectableText(point.accessMode.toChineseString()))),
+      ]);
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(left: 20, right: 20),
-      child: _exportConfigList.isEmpty
+      child: list.isEmpty
           ? Container()
           : Column(
               children: [
@@ -197,14 +87,6 @@ class _PointViewPageState extends State<PointViewPage> {
                         child: ComboBoxPluginConfig(
                           controller: _protocolNameController,
                           pluginType: 'DataOutput',
-                        ),
-                      ),
-                      const SizedBox(width: 40),
-                      const SizedBox(
-                        width: 220,
-                        child: TextBox(
-                          placeholder: '配置名称',
-                          expands: false,
                         ),
                       ),
                       const SizedBox(width: 40),
@@ -231,15 +113,51 @@ class _PointViewPageState extends State<PointViewPage> {
                   ),
                 ),
                 Expanded(
-                  child: GridView.builder(
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 1.3,
-                              crossAxisSpacing: 3,
-                              mainAxisSpacing: 3),
-                      itemCount: _exportConfigList.length,
-                      itemBuilder: _exportConfigItem),
+                  child: DataTable(
+                    columnSpacing: 12,
+                    horizontalMargin: 12,
+                    sortColumnIndex: 0,
+                    columns: [
+                      DataColumn(
+                        label: Container(
+                          width: 80,
+                          alignment: Alignment.center,
+                          child: const Text('id'),
+                        ),
+                      ),
+                      DataColumn(
+                        label: Container(
+                            alignment: Alignment.center,
+                            width: 120,
+                            child: const Text('点位地址')),
+                      ),
+                      DataColumn(
+                        label: Container(
+                            width: 160,
+                            alignment: Alignment.center,
+                            child: const Text('点位描述')),
+                      ),
+                      DataColumn(
+                        label: Container(
+                            width: 80,
+                            alignment: Alignment.center,
+                            child: const Text('数据类型')),
+                      ),
+                      DataColumn(
+                        label: Container(
+                            width: 80,
+                            alignment: Alignment.center,
+                            child: const Text('部件号')),
+                      ),
+                      DataColumn(
+                        label: Container(
+                            width: 80,
+                            alignment: Alignment.center,
+                            child: const Text('点位值')),
+                      ),
+                    ],
+                    rows: _itemData(),
+                  ),
                 ),
                 NumberPagination(
                   onPageChanged: (int pageNumber) {
@@ -279,21 +197,5 @@ class _PointViewPageState extends State<PointViewPage> {
         ],
       ),
     );
-  }
-
-  Future<void> _deleteDevice(int id) async {
-    if (!(await showContentDialog() ?? false)) {
-      return;
-    }
-    bool res = await exportService.delete(id, context);
-    if (res) {
-      displayInfoBar(context, builder: (context, close) {
-        return InfoBar(
-          title: const Text('删除成功'),
-          severity: InfoBarSeverity.info,
-        );
-      });
-      initExportConfigList();
-    }
   }
 }

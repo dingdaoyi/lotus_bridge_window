@@ -52,4 +52,13 @@ class PointService{
     await ToastUtils.error(context, title: '删除点位失败',message: result.msg);
     return false;
   }
+
+  Future<dynamic>   readPointValue(int id, BuildContext context) async{
+    Result result = await httpUtil.get('/point/value/$id');
+    if (result.success) {
+      return result.data;
+    }
+    await ToastUtils.error(context, title: '读取点位失败',message: result.msg);
+    return null;
+  }
 }

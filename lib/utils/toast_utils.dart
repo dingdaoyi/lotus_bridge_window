@@ -57,4 +57,24 @@ class ToastUtils {
       ),
     ))??false;
   }
+
+
+  static Future<bool> showData(BuildContext context,
+      {String? tile, required String content}) async {
+    return (await showDialog<bool>(
+      context: context,
+      builder: (context) => ContentDialog(
+        title: Text(tile ?? '确认操作'),
+        content: Text(
+          content,
+        ),
+        actions: [
+          FilledButton(
+            child: const Text('关闭'),
+            onPressed: () => Navigator.pop(context, false),
+          ),
+        ],
+      ),
+    ))??false;
+  }
 }
