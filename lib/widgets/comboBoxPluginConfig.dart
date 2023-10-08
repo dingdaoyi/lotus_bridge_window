@@ -29,9 +29,11 @@ class _ComboBoxPluginConfigState extends State<ComboBoxPluginConfig> {
     super.initState();
     widget.controller
     .addListener(() {
-    setState(() {
-      value=widget.controller.text==''?null:widget.controller.text;
-    });
+      if(value!=widget.controller.text) {
+        setState(() {
+          value=widget.controller.text==''?null:widget.controller.text;
+        });
+      }
     });
 
     initData();

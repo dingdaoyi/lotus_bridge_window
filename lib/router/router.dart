@@ -73,12 +73,12 @@ final router = GoRouter(
         GoRoute(
             name: "dataExport",
             path: '/dataExport',
-            builder: (context, state) => DataExportConfigPage(key: UniqueKey()),
+            builder: (context, state) => const DataExportConfigPage(),
             routes: [
               GoRoute(
                 name: "exportConfigAdd",
                 path: 'add',
-                builder: (context, state) => ExportConfigEdit(key: UniqueKey()),
+                builder: (context, state) => const ExportConfigEdit(),
               ),
               GoRoute(
                 name: "exportConfigEdit",
@@ -92,7 +92,7 @@ final router = GoRouter(
         GoRoute(
             name: "pluginConfig",
             path: '/pluginConfig',
-            builder: (context, state) => PluginConfigPage(key: UniqueKey()),
+            builder: (context, state) => const PluginConfigPage(),
             routes: [
               GoRoute(
                 name: "pluginConfigDetails",
@@ -106,7 +106,7 @@ final router = GoRouter(
         GoRoute(
             name: "pointView",
             path: '/pointView',
-            builder: (context, state) => PointViewPage(key: UniqueKey()),
+            builder: (context, state) => const PointViewPage(),
         ),
         GoRoute(
           name: "settings",

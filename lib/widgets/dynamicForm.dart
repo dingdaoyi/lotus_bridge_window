@@ -1,7 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:lotus_bridge_window/service/http_utils.dart';
 
-import '../models/result.dart';
 
 class DynamicForm extends StatefulWidget {
   final Map<String, dynamic> formData;
