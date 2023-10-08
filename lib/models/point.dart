@@ -9,10 +9,11 @@ class Point {
   int precision;
   String description;
   String? partNumber;
+  String? identifier;
 
   Point({
-     this.id,
-     this.deviceId,
+    this.id,
+    this.deviceId,
     required this.groupId,
     required this.address,
     required this.dataType,
@@ -21,6 +22,7 @@ class Point {
     required this.precision,
     required this.description,
     this.partNumber,
+    this.identifier,
   });
 
   factory Point.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class Point {
       precision: json['precision'] as int,
       description: json['description'] as String,
       partNumber: json['partNumber'] as String?,
+      identifier: json['identifier'] as String?,
     );
   }
 
@@ -50,6 +53,7 @@ class Point {
     data['precision'] = precision;
     data['description'] = description;
     data['partNumber'] = partNumber;
+    data['identifier'] = identifier;
     return data;
   }
 
@@ -116,6 +120,7 @@ enum DataType {
   String,
   Boolean,
 }
+
 enum AccessMode {
   ReadWrite,
   ReadOnly,
@@ -135,4 +140,40 @@ extension AccessModeExtension on AccessMode {
         return '';
     }
   }
+}
+
+class PointValue {
+  int id;
+  Point point;
+  dynamic value;
+
+  PointValue(this.id, this.point, this.value);
+
+  Map<String, dynamic> toJson(){
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['point'] = point.toJson();
+    data['value'] = value;
+    return data;
+  }
+
+  factory PointValue.fromJson(Map<String, dynamic> json) {
+    return PointValue(
+      json['id'],
+      Point.fromJson(json['point'] as Map<String, dynamic>),
+      json['value'],
+    );
+  }
+
+  bool isNumber() {
+    return point.dataType == DataType.Integer ||
+        point.dataType == DataType.Float;
+  }
+
+  parseNumber() {
+    double res=value * point.multiplier;
+
+    return res.toStringAsFixed(point.precision);
+  }
+
 }

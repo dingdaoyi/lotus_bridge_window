@@ -107,6 +107,10 @@ class _DynamicFormState extends State<DynamicForm> {
      label = field['label'] as String;
      placeholder = field['placeholder'] as String;
      options = field['options']??{};
+     if(elType!='select'){
+       return;
+     }
+
      if(options['dict_value']==null||options['dict_value'].isEmpty){
        String? dictUrl= options['dict_url'];
        if(dictUrl!=null) {

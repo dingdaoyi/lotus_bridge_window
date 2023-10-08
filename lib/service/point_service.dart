@@ -8,57 +8,70 @@ import '../models/result.dart';
 import '../utils/toast_utils.dart';
 import 'http_utils.dart';
 
-class PointService{
+class PointService {
   HttpUtil httpUtil = HttpUtil();
 
-  Future<PaginationResponse<Point>> pointPage(int groupId,{int page=1,int limit=10}) async {
-    Result result = await httpUtil.post('/point/page',
-        {
-          'groupId':groupId,
-          'page':{
-            'page':page,
-            'limit':limit
-          }
-        });
+  Future<PaginationResponse<Point>> pointPage(int groupId,
+      {int page = 1, int limit = 10}) async {
+    Result result = await httpUtil.post('/point/page', {
+      'groupId': groupId,
+      'page': {'page': page, 'limit': limit}
+    });
     if (result.success) {
-      PaginationResponse<Point> response=  PaginationResponse.fromJson(result.data, (pointJson) => Point.fromJson(pointJson));
+      PaginationResponse<Point> response = PaginationResponse.fromJson(
+          result.data, (pointJson) => Point.fromJson(pointJson));
       return response;
     }
     return PaginationResponse.empty();
   }
 
-  Future<bool> savePoint(Point point,BuildContext context) async {
-    Result result = await httpUtil.post('/point',point.toJson());
+  Future<bool> savePoint(Point point, BuildContext context) async {
+    Result result = await httpUtil.post('/point', point.toJson());
     if (result.success) {
       return true;
     }
-   await ToastUtils.error(context, title: '添加点位失败',message: result.msg);
-    return false;
-  }
-  Future<bool> updatePoint(Point point,BuildContext context) async {
-    Result result = await httpUtil.put('/point/${point.id}',point.toJson());
-    if (result.success) {
-      return true;
-    }
-    await ToastUtils.error(context, title: '修改点位失败',message: result.msg);
+    await ToastUtils.error(context, title: '添加点位失败', message: result.msg);
     return false;
   }
 
-  Future<bool> deletePoint(int id,BuildContext context) async {
+  Future<bool> updatePoint(Point point, BuildContext context) async {
+    Result result = await httpUtil.put('/point/${point.id}', point.toJson());
+    if (result.success) {
+      return true;
+    }
+    await ToastUtils.error(context, title: '修改点位失败', message: result.msg);
+    return false;
+  }
+
+  Future<bool> deletePoint(int id, BuildContext context) async {
     Result result = await httpUtil.delete('/point/$id');
     if (result.success) {
       return true;
     }
-    await ToastUtils.error(context, title: '删除点位失败',message: result.msg);
+    await ToastUtils.error(context, title: '删除点位失败', message: result.msg);
     return false;
   }
 
-  Future<dynamic>   readPointValue(int id, BuildContext context) async{
+  Future<dynamic> readPointValue(int id, BuildContext context) async {
     Result result = await httpUtil.get('/point/value/$id');
     if (result.success) {
       return result.data;
     }
-    await ToastUtils.error(context, title: '读取点位失败',message: result.msg);
+    await ToastUtils.error(context, title: '读取点位失败', message: result.msg);
     return null;
+  }
+
+  Future<List<PointValue>> readPointValuesByGroupId(
+      int groupId, BuildContext context) async {
+    Result result = await httpUtil.get('/points/value/$groupId');
+    List<PointValue> list = [];
+    if (result.success) {
+      for (var val in result.data) {
+        list.add(PointValue.fromJson(val));
+      }
+      return list;
+    }
+    await ToastUtils.error(context, title: '读取点位失败', message: result.msg);
+    return list;
   }
 }

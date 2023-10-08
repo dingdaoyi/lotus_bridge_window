@@ -56,6 +56,7 @@ class _PointPageState extends State<PointPage> {
         DataCell(Center(child: SelectableText('${point.multiplier}'))),
         DataCell(
             Center(child: SelectableText(point.accessMode.toChineseString()))),
+        DataCell(Center(child: SelectableText(point.identifier ?? ''))),
         DataCell(Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -200,6 +201,12 @@ class _PointPageState extends State<PointPage> {
                       ),
                       DataColumn(
                         label: Container(
+                            width: 80,
+                            alignment: Alignment.center,
+                            child: const Text('标识符')),
+                      ),
+                      DataColumn(
+                        label: Container(
                             alignment: Alignment.center,
                             width: 180,
                             child: const Text('操作')),
@@ -270,6 +277,7 @@ class _PointEditState extends State<PointEdit> {
   TextEditingController descriptionController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController partNumController = TextEditingController();
+  TextEditingController identifierController = TextEditingController();
   DataType dataType = DataType.Integer;
   int precision = 1;
   double multiplier = 1;
@@ -290,6 +298,7 @@ class _PointEditState extends State<PointEdit> {
     addressController.dispose();
     partNumController.dispose();
     formKey.currentState?.dispose();
+    identifierController.dispose();
   }
 
   @override
@@ -395,6 +404,12 @@ class _PointEditState extends State<PointEdit> {
                             controller: partNumController,
                             placeholder: '请输入部件号'),
                       ),
+                      InfoLabel(
+                        label: '标识符',
+                        child: TextFormBox(
+                            controller: identifierController,
+                            placeholder: '请输入标识符'),
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -466,7 +481,9 @@ class _PointEditState extends State<PointEdit> {
         precision: precision,
         description: descriptionController.text,
         id: id,
-        partNumber: partNumController.text);
+        partNumber: partNumController.text,
+        identifier: identifierController.text,
+    );
   }
 
   void initDeviceGroup() {

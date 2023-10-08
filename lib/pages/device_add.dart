@@ -80,7 +80,7 @@ class _DeviceAddState extends State<DeviceAdd> {
           id: widget.deviceId??-1,
           name: deviceNameController.text,
           deviceType: 'Gateway',
-          protocolName: deviceNameController.text,
+          protocolName:_pluginConfig?.name??'',
           customData:formDataMap
       );
      bool res=  isEdite?  await deviceService.update(device, context):

@@ -10,7 +10,9 @@ class DeviceGroupService {
   HttpUtil httpUtil = HttpUtil();
 
   Future<List<DeviceGroup>> deviceGroupList({int? deviceId}) async {
-    Result result = await httpUtil.get('/device-group/list?device_id=$deviceId',);
+    Result result = await httpUtil.get('/device-group/list',queryParameters:deviceId==null?null:{
+      'deviceId':deviceId
+    });
     List<DeviceGroup> list = [];
     if (result.success) {
       List resList = result.data;
