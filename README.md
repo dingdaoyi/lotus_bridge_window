@@ -1,15 +1,16 @@
-# LotusBridge桌面管理软件
+# lotus_bridge_window桌面管理软件
 
 [![许可证](https://img.shields.io/badge/许可证-GPL3.0-blue.svg)](LICENSE)
+[![构建状态](https://img.shields.io/github/workflow/status/dingdaoyi/lotus_bridge_window/Build%20&%20Test)](https://github.com/dingdaoyi/lotus_bridge_window/actions)
 
-此项目是LotusBridge 的桌面应用,了解LotusBridge请访问:
+lotus_bridge_window 是用 Flutter 编写的桌面应用，用于管理 LotusBridge 项目。
 
 https://github.com/dingdaoyi/lotus_bridge_window
 
 
 ## 启动项目
-如果您只想下载执行文件,可以从actions下载:
-https://github.com/dingdaoyi/lotus_bridge_window/actions
+如果您只想下载执行文件，可以从 [Actions](https://github.com/dingdaoyi/lotus_bridge_window/actions) 下载...
+
 ```bash
 git clone https://github.com/dingdaoyi/lotus_bridge_window.git
 cd lotus_bridge_window
